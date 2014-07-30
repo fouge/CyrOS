@@ -34,7 +34,10 @@ enum vga_color
 	COLOR_LIGHT_BROWN = 14,
 	COLOR_WHITE = 15,
 };
- 
+
+/**
+foreground color, background color
+*/
 uint8_t make_color(enum vga_color fg, enum vga_color bg)
 {
 	return fg | bg << 4;
@@ -61,13 +64,17 @@ static const size_t VGA_HEIGHT = 24;
 size_t terminal_row;
 size_t terminal_column;
 uint8_t terminal_color;
-uint16_t* terminal_buffer;
+
+uint16_t* terminal_buffer; // address in video memory in protected mode 
+// Each character element in this text memory is represented by 16 bits.
+// The first byte should have the representation of the character as in ASCII.
+// The second byte is the attribute-byte. This describes the formatting of the character including attributes such as color.
  
 void terminal_initialize()
 {
 	terminal_row = 0;
 	terminal_column = 0;
-	terminal_color = make_color(COLOR_LIGHT_RED, COLOR_BLACK);
+	terminal_color = make_color(COLOR_WHITE, COLOR_BLACK);
 	terminal_buffer = (uint16_t*) 0xB8000;
 	for ( size_t y = 0; y < VGA_HEIGHT; y++ )
 	{
@@ -78,7 +85,8 @@ void terminal_initialize()
 		}
 	}
 }
- 
+
+
 void terminal_setcolor(uint8_t color)
 {
 	terminal_color = color;
@@ -138,9 +146,10 @@ extern "C" /* Use C linkage for kernel_main. */
 void kernel_main()
 {
 	terminal_initialize();
-	/* Since there is no support for newlines in terminal_putchar yet, \n will
-	   produce some VGA specific character instead. This is normal. */
-	terminal_writestring("Hello, kernel World!\n\n\n\nHow are you ?\n\n\n\nFine thank you. 12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849 \n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19\n20\n21\n");
+	terminal_setcolor(9);
+	terminal_writestring("               ___  ___ \n  __ _  _ _ _ / _ \\/ __|\n / _| || | '_| (_) \\__ \\ \n \\__|\\_, |_|  \\___/|___/\n     |__/               \n");
+	terminal_setcolor(7);
+	terminal_writestring("Cyril Fougeray (c), based on OSDev.org\n");
 	// while(1){
 	// }
 }

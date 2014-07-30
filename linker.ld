@@ -6,7 +6,7 @@ ENTRY(_start)
    kernel image. */
 SECTIONS
 {
-	/* Begin putting sections at 1 MiB, a conventional place for kernels to be
+	/* Begin putting sections at 1 MiB (0x100000), a conventional place for kernels to be
 	   loaded at by the bootloader. */
 	. = 1M;
 

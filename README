@@ -1,6 +1,12 @@
-OSDev
+CyrOS
 ------------------------------------------
 
 Kernel I started in order to learn !
 
 Fully based on OSdev.org
+
+
+Fonctions I implemented : 
+ - Support for Newlines to Terminal Driver
+ - Terminal Scrolling
+ - Colorful Rendering
