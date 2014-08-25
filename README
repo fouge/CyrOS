@@ -2,11 +2,13 @@ CyrOS
 ------------------------------------------
 
 Kernel I started in order to learn !
+There is no bootloader included. Qemu's "-kernel" option is used for testing.
 
-Fully based on OSdev.org
-
+Based on OSdev.org tutorials.
 
 Fonctions I implemented : 
  - Support for Newlines to Terminal Driver
  - Terminal Scrolling
  - Colorful Rendering
+
+ Works in Real Mode (for the moment).

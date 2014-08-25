@@ -56,6 +56,9 @@ _start:
 	# our stack (as it grows downwards).
 	movl $stack_top, %esp
 
+	# crtbegin.o is used in the Kernel (crtbegin.o and crtend.o are provided by the compiler, see Makefile)
+	# call _init
+
 	# We are now ready to actually execute C code. We cannot embed that in an
 	# assembly file, so we'll create a kernel.c file in a moment. In that file,
 	# we'll create a C entry point called kernel_main and call it here.

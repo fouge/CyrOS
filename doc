@@ -3,6 +3,7 @@ Summary
 
 1 - How does an x86 machine boot ?
 2 - Real Mode
+3 - Global Constructors
 
 A - Sources
 
@@ -12,7 +13,7 @@ A - Sources
 
 The x86 CPU is hardwired to begin execution at the physical address [0xFFFFFFF0]. It is in fact, the last 16 bytes of the 32-bit address space. This address just contains a jump instruction to the address in memory where BIOS has copied itself.
 
-Thus, the BIOS code starts its execution.  BIOS first searches for a bootable device in the configured boot device order. It checks for a certain magic number to determine if the device is bootable or not.
+Thus, the BIOS code starts its execution.  BIOS first searches for a bootable device in the configured boot device order. It checks for a certain magic number (0xAA55) to determine if the device is bootable or not.
 
 Once the BIOS has found a bootable device, it copies the contents of the device’s first sector into RAM starting from physical address [0x7c00]; and then jumps into the address and executes the code just loaded. This code is called the bootloader.
 
@@ -29,6 +30,23 @@ In Real Mode, there is a little over 1 MB of "addressable" memory. You can acces
 No virtual memory. Segment registers can be used but with difficulty.
 
 http://wiki.osdev.org/Real_Mode
+
+-----
+| 3 | Global Constructors
+-----
+
+The System V ABI (as used by ELF platforms) specifies use of five different object files that together handle program initialization. These are traditionally called crt0.o, crti.o, crtbegin.o, crtend.o, and crtn.o. Together these object files implement two special functions: _init which runs the global constructors and other initialization tasks, and _fini that runs the global destructors and other termination tasks.
+Your cross-compiler will provide you with crtbegin.o and crtend.o. 
+crti.o and crtn.o must be provided. 
+The fifth file crt0.o contains the program entry point (normally _start) and calls the special _init function that runs the "program initialization tasks". 
+The object file that contains _start acts as crt0.o in a kernel (boot.s in our case).
+
+To understand, consider this program being linked :
+$ i585-elf-gcc foo.o bar.o -o program
+The compiler will rewrite the command line and pass it to the linker as (link order matters):
+$ i585-elf-ld crt0.o crti.o crtbegin.o foo.o bar.o crtend.o crtn.o
+
+
 
 -----
 | A | Sources
